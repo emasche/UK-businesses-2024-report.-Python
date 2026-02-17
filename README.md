@@ -13,7 +13,7 @@ From this report, four datasets were downloaded:
    
 The areas in the dataset and in the GeoJSON file found on the ONS website represent a mix of UK administrative units, including London boroughs, local authority districts, and one county.
 
-## Loading and cleaning the Data
+# Loading and cleaning the Data
 
 First we import the **pandas** library to work with Excel files and dataFrames and gives it the short nickname pd to be able to use all pandas functions (read_excel, DataFrame, drop, etc.)
 
@@ -118,7 +118,7 @@ final_table['Area name'] = final_table['Area name'].str.strip()
 
 Since the datasets have been combined, there are no nulls or duplicates, and all variable types are correct and consistent. The analysis phase can now begin.
 
-## Analysis
+# Analysis
 
 The decribe() function was used to generate summary statistics for the dataset.
 
@@ -237,7 +237,7 @@ Now that the datasets have been cleaned and the area names in both match, we can
 import matplotlib.pyplot as plt #for plots
 ```
 
-A boxplot was created to visualise the distribution of number of enterprise.
+Distribution of number of enterprise (boxplot).
 
 ```python
 sns.boxplot(x='Value (number of enterprises)', data=final_table)
@@ -265,7 +265,7 @@ The logarithmic boxplot shows that the median lies close to 10,000, indicating t
 Although the distribution is right-skewed in absolute terms, the logarithmic scale reveals greater relative dispersion among smaller regions, as indicated by the longer left whisker.
 The interquartile range (25th–75th percentile) spans less than one order of magnitude (a ten-fold difference), suggesting moderate variation among most UK regions.
 
-We will now creates a histogram to visualise the distribution of the number of enterprises across UK regions in 2024.
+We will now creates a histogram to visualise the distribution of the number of enterprises across UK areas in 2024.
 
 ```python
 final_table['Value (number of enterprises)'].hist(bins=25, color='orange')
@@ -644,12 +644,8 @@ def Color_map_d(feature):# 'feature' = one geographic area (eg Camden/Lambeth..)
         "fillOpacity":0,
     }
 
-
-# In[ ]:
-
-
+```python
 #Add a single GeoJson layer
-
 folium.GeoJson(
     "UKmap.geojson",
     style_function=Color_map_d, #style_function() (Folium Library) is used to define the style of GeoJSON features (Polygons, lines).
@@ -658,24 +654,16 @@ folium.GeoJson(
 
 # Display map
 top5drmap
+```
 
+The map highlights the top 5 areas that experienced the lowest business termination rates in 2024.
+We can see that the top 5 is divided in three countries: the Shetland Islands in Scotland, the Fermanagh and Omagh region and the Mid-Ulster region in South-western part of Northern Ireland and City of London and Isles of Scilly for England.
+In contrast, within the top 5 areas with the highest business death rates in 2024, four are located in England:
+Mansfield, Blackpool, Wolverhampton, Salford (Manchester), while one (Torfaen) is located in Wales.
 
-# In[ ]:
+Now let's creates a Choropleth map showing death rates of UK local authorities in shades of green.
 
-
-# The map highlights the top 5 areas that experienced the lowest business termination rates in 2024.
-# We can see that the top 5 is divided in three countries: the Shetland Islands in Scotland, the Fermanagh and Omagh region and the Mid-Ulster region in South-western part of Northern Ireland
-# and City of London and Isles of Scilly for England.
-
-# In contrast, within the top 5 areas with the highest business death rates in 2024, four are located in England:
-# Mansfield, Blackpool, Wolverhampton, Salford (Manchester), while one (Torfaen) is located in Wales.
-
-
-# In[ ]:
-
-
-## Creates a Choropleth map showing death rates of UK local authorities in shades of green.
-
+```python
 dmap = folium.Map(location=[54.5, -2], zoom_start=6) # Create map 
 
 folium.Choropleth(  # Add instructions
@@ -689,118 +677,81 @@ folium.Choropleth(  # Add instructions
     nan_fill_color="lightgray",
     legend_name = 'Value (%) death'
 ).add_to(dmap) # Add to map
+```
 
-
-# In[ ]:
-
-
+```python
 dmap
+```
 
-
-# In[ ]:
-
-
-# In Northern Ireland, the Strabane/Derry region records the highest business death rates, ranging from 9% to 12%. Eastern regions follow with rates around 7% to 9%, while most of the rest of Northern Ireland experiences lower rates of 5% to 7%.
+In Northern Ireland, the Strabane/Derry region records the highest business death rates, ranging from 9% to 12%. Eastern regions follow with rates around 7% to 9%, while most of the rest of Northern Ireland experiences lower rates of 5% to 7%.
 # In Scotland, most areas have death rates between 7% and 9%. Some regions, such as Dumfries & Galloway (Southern Scotland) and Highland (Northern Scotland), have lower rates of 5% to 7%. In contrast, the areas around Glasgow and Edinburgh show higher rates, ranging from 9% to 12%.
-# In Wales, the majority of local authorities have death rates around 7% to 9%, except for Powys, which is lower (5% to 7%), and Torfaen, which is notably high, between 16% and 18%.
-# In England, most local authorities experience business death rates of 7% to 9%. Some areas, such as Malvern Hills (Worcestershire), North West Leicestershire, and Torridge (Devon), are lower at 5% to 7%. Around major cities like London, rates vary more: the highest are in Mansfield (Nottinghamshire) and Blackpool, reaching 16% to 18%, while other urban areas, particularly near Birmingham, show rates between 12% and 16%.
+In Wales, the majority of local authorities have death rates around 7% to 9%, except for Powys, which is lower (5% to 7%), and Torfaen, which is notably high, between 16% and 18%.
+In England, most local authorities experience business death rates of 7% to 9%. Some areas, such as Malvern Hills (Worcestershire), North West Leicestershire, and Torridge (Devon), are lower at 5% to 7%. Around major cities like London, rates vary more: the highest are in Mansfield (Nottinghamshire) and Blackpool, reaching 16% to 18%, while other urban areas, particularly near Birmingham, show rates between 12% and 16%.
 
+## New businesses rates 
 
-# In[ ]:
+A boxplot have been created to visualise the distribution of business creation rates.
 
-
-# New businesses rates 
-
-
-# In[ ]:
-
-
-# Create a boxplot to visualise the distribution of business creation rates.
+```python
 sns.boxplot(x='Value (%) New', data=final_table)
 
 plt.title('Distribution of Percentage Business creation across Areas')
 plt.show()
+```
 
+The whiskers extend from around 6%, indicating regions with weaker entrepreneurial activity, to 15-16% representing stronger-performing regions.
+The boxplot shows that the median percentage of new businesses across UK is around 10-11%. The median lies slightly closer to the lower end of the distribution, indicating that more than 50% of UK areas recorded over 10% new businesses in 2024.
+The interquartile range is relatively narrow compared to the full x-axis range, suggesting that the middle 50% of areas are fairly similar in terms of enterprise formation. Most typical areas fall roughly between 9% and 12%, indicating limited variation.  .
+The distribution is positively skewed, with a slightly longer right-hand tail extending toward higher values. While most regions clusters around the median, several high-end outliers are present, likely reflecting major cities with exceptionally large numbers of new enterprises.
 
-# In[ ]:
+Now let's create a histogram to visualize the distribution of new business percentages across regions,
 
-
-# The whiskers extend from around 6%, indicating regions with weaker entrepreneurial activity, to 15-16% representing stronger-performing regions.
-# The boxplot shows that the median percentage of new businesses across UK is around 10-11%. The median lies slightly closer to the lower end of the distribution, indicating that more than 50% of UK areas recorded over 10% new businesses in 2024.
-# The interquartile range is relatively narrow compared to the full x-axis range, suggesting that the middle 50% of areas are fairly similar in terms of enterprise formation. Most typical areas fall roughly between 9% and 12%, indicating limited variation.  .
-# The distribution is positively skewed, with a slightly longer right-hand tail extending toward higher values. While most regions clusters around the median, several high-end outliers are present, likely reflecting major cities with exceptionally large numbers of new enterprises.
-
-
-# In[ ]:
-
-
-# Create a histogram to visualize the distribution of new business percentages across regions,
+```python
 # using 20 bins, based on the range observed in the boxplot
-
 final_table['Value (%) New'].hist(bins=20,color='orange')
 
 plt.title('Distribution of Percentage Business creation across Areas')
 plt.show()
+```
 
+The histogram aligns with the boxplot, showing that most UK regions have business formation rates between 9% and 11%. 
+The roughly bell-shaped distribution indicates that values cluster around the median, suggesting a fairly normal distribution where most regions exhibit typical business activity. The noticeable spike around 9% highlights that a substantial number of regions share this specific level of new business formation in 2024,
+implying a common baseline of entrepreneurial activity across many areas, while extreme values remain relatively rare.
 
-# In[ ]:
+Let's display the 5 UK areas with the highest business creation rates in 2024 and the 5 with the lowest ones.
 
-
-# The histogram aligns with the boxplot, showing that most UK regions have business formation rates between 9% and 11%. 
-# The roughly bell-shaped distribution indicates that values cluster around the median, suggesting a fairly normal distribution where most regions exhibit typical business activity.
-# The noticeable spike around 9% highlights that a substantial number of regions share this specific level of new business formation in 2024,
-# implying a common baseline of entrepreneurial activity across many areas, while extreme values remain relatively rare.
-
-
-# In[ ]:
-
-
-# Display the 5 UK areas with the highest business creation rates in 2024 and the 5 with the lowest ones.
+```python
 final_table.set_index('Area name')['Value (%) New'].sort_values(ascending=False)
+```
+The UK areas with the highest business creation rates in 2024 were Newham (17%), Barking and Dagenham (17%), and Luton (16%). 
+In contrast, the UK areas with the lowest business creation rates were Orkney Islands (6%), Shetland Islands (7%) and Mid Ulster (7%).
 
-
-# In[ ]:
-
-
-# The UK areas with the highest business creation rates in 2024 were Newham (17%), Barking and Dagenham (17%), and Luton (16%). 
-# In contrast, the UK areas with the lowest business creation rates were Orkney Islands (6%), Shetland Islands (7%) and Mid Ulster (7%).
-
-
-# In[ ]:
-
-
-# Creates a bar chart that displays the top 10 UK areas that recorder the highest business creation rates in 2024
-
-# Create a DataFrame containing the top 10 UK areas with the highest business creation rates in 2024
+Let's create a DataFrame containing the top 10 UK areas with the highest business creation rates in 2024
+```python
 top_10_new = final_table[['Area name','Value (%) New']]\
     .sort_values(by='Value (%) New', ascending=False)\
     .head(10)
-
-# Create a bar chart to display the top 10 previously created
+```
+```python
 top_10_new.plot(x='Area name',y='Value (%) New',kind='barh',color='violet',legend=False) # y=Index, x=Values
 plt.xlabel('Value (%) New')
 plt.ylabel('Area name')
 plt.title('Top 10 UK areas by business creation rates in 2024')
 plt.show()
+```
 
+Let's create a map that highlight only the 5 areas with the lowest business creation rates and the 5 areas with the highest ones.
 
-
-# In[ ]:
-
-
-# Create a map that highlight only the 5 areas with the lowest business creation rates and the 5 areas with the highest ones.
-
+```python
 # First we have to create two variable, one with the top 5 areas recording the lowest business creation rates and the top 5 with the highest ones.
 top_5_hcr = set(final_table.nlargest(5, "Value (%) New")["Area name"])
 top_5_lcr = set(final_table.nsmallest(5, "Value (%) New")["Area name"])
-
-
-# In[ ]:
-
-
+```
+```python
 # Create base maptop5drmap = folium.Map(location=[54.5, -2], zoom_start=6) # After research, UK latitude is roughly 54.5 and longitude is roughly -2
 top5crmap = folium.Map(location=[54.4, -2], zoom_start=6)
-
+```
+```python
 # Add layers to the base map
 folium.Choropleth(
     geo_data='UKmap.geojson',
@@ -808,11 +759,8 @@ folium.Choropleth(
     fill_opacity=0.2,
     line_opacity=0.1,
     nan_fill_color='lightgray').add_to(top5crmap)
-
-
-# In[ ]:
-
-
+```
+```python
 # Define a function 'Color_map_c' that takes a GeoJSON feature (a single geographic area) 
 
 def Color_map_c(feature):# 'feature' = one geographic area (eg Camden/Lambeth..).
@@ -839,13 +787,9 @@ def Color_map_c(feature):# 'feature' = one geographic area (eg Camden/Lambeth..)
         "weight": 0,
         "fillOpacity":0,
     }
-
-
-# In[ ]:
-
-
+```
+```python
 #Add function instructions to map
-
 folium.GeoJson(
     "UKmap.geojson",
     style_function=Color_map_c, #style_function() (Folium Library) is used to define the style of GeoJSON features.
@@ -854,20 +798,13 @@ folium.GeoJson(
 
 # Display map
 top5crmap
+```
+Among the five UK areas with the lowest business creation rates in 2024, two were in Scotland (Orkney Islands and Shetland Islands), one in Northern Ireland (Mid Ulster), one in Wales (Ceredigion), and one in England (Mid Suffolk).
+In contrast, all five areas with the highest business creation rates were in England, including three in the Greater London area (Newham, Barking and Dagenham, and Islington), as well as Luton and Middlesbrough.
 
+### Creation rates by UK regions.
 
-# In[ ]:
-
-
-# Among the five UK areas with the lowest business creation rates in 2024, two were in Scotland (Orkney Islands and Shetland Islands), one in Northern Ireland (Mid Ulster), one in Wales (Ceredigion), and one in England (Mid Suffolk).
-# In contrast, all five areas with the highest business creation rates were in England, including three in the Greater London area (Newham, Barking and Dagenham, and Islington), as well as Luton and Middlesbrough.
-
-
-# In[ ]:
-
-
-# Create a Choropleth map that display the creation rates by UK regions.
-
+```python
 nmap = folium.Map(location=[54.5, -2], zoom_start=6)
 
 folium.Choropleth(
@@ -882,49 +819,29 @@ folium.Choropleth(
     legend_name = 'Value (%) New'
 ).add_to(nmap)
 
-
-# In[ ]:
-
-
 nmap
+```
+In Northern Ireland, the Strabane/Derry region records the highest business birth rates, ranging from 14% to 15%, while Belfast is slightly lower at 12% to 14%. Most of the rest of Northern Ireland falls between 8% and 10%, except for central Northern Ireland, where rates are particularly low, around 6% to 8%.
+In Scotland, the majority of areas have business birth rates between 8% and 10%. Certain regions have very low rates, ranging from 6% to 8%, including Aberdeenshire (Eastern Scotland), Eilean Siar (Western Isles), Argyll & Bute (Western Scotland), and some of the Northern Islands. In contrast, areas around Glasgow and Edinburgh experience higher birth rates, approximately 13% to 14%.
+In Wales, most local authorities report business birth rates of 8% to 10%. Gwynedd and Ceredigion in Western Wales have lower rates, around 6% to 8%, while Cardiff and its surrounding areas are higher, ranging from 10% to 12%, with the highest nearby, reaching 12% to 14%.
+In England, most local authorities see business birth rates of 8% to 10%. Some areas near major cities have higher rates of 14% to 15%, reaching up to 16% in London and Middlesbrough. Conversely, areas such as Mid Suffolk, East Cambridgeshire, and Derbyshire Dales exhibit lower rates, around 6% to 8%.
 
 
-# In[ ]:
+## Business Closures VS Creations
 
+Below are the areas with the highest net change (more business creations than closures) and the lowest net change (more business closures than creations).
 
-# In Northern Ireland, the Strabane/Derry region records the highest business birth rates, ranging from 14% to 15%, while Belfast is slightly lower at 12% to 14%. Most of the rest of Northern Ireland falls between 8% and 10%, except for central Northern Ireland, where rates are particularly low, around 6% to 8%.
-# In Scotland, the majority of areas have business birth rates between 8% and 10%. Certain regions have very low rates, ranging from 6% to 8%, including Aberdeenshire (Eastern Scotland), Eilean Siar (Western Isles), Argyll & Bute (Western Scotland), and some of the Northern Islands. In contrast, areas around Glasgow and Edinburgh experience higher birth rates, approximately 13% to 14%.
-# In Wales, most local authorities report business birth rates of 8% to 10%. Gwynedd and Ceredigion in Western Wales have lower rates, around 6% to 8%, while Cardiff and its surrounding areas are higher, ranging from 10% to 12%, with the highest nearby, reaching 12% to 14%.
-# In England, most local authorities see business birth rates of 8% to 10%. Some areas near major cities have higher rates of 14% to 15%, reaching up to 16% in London and Middlesbrough. Conversely, areas such as Mid Suffolk, East Cambridgeshire, and Derbyshire Dales exhibit lower rates, around 6% to 8%.
-
-
-# In[ ]:
-
-
-# Business Closures VS Creations
-
-
-# In[ ]:
-
-
-# Shows the areas with the highest net change (more business creations than closures) and the lowest net change (more business closures than creations).
-
+```python
 final_table.set_index('Area name')['net change'].sort_values(ascending=False)
+```
+Negative values indicate areas where there were more business closures than creations in 2024, while positive values indicate areas where business creations exceeded closures.
 
+The results show that the areas with the highest positive net change were Derry City and Strabane (5%), Newham (5%), and Barking and Dagenham (5%), meaning these areas experienced the strongest net business growth.
+In contrast, the areas with the lowest net change were Mansfield (-5%), Torfaen (-4%), and Blackpool (-4%), indicating that closures outnumbered new business creations in these locations.
 
-# In[ ]:
+## Business Net changes by regions
 
-
-# Negative values indicate areas where there were more business closures than creations in 2024, while positive values indicate areas where business creations exceeded closures.
-
-# The results show that the areas with the highest positive net change were Derry City and Strabane (5%), Newham (5%), and Barking and Dagenham (5%), meaning these areas experienced the strongest net business growth.
-
-# In contrast, the areas with the lowest net change were Mansfield (-5%), Torfaen (-4%), and Blackpool (-4%), indicating that closures outnumbered new business creations in these locations.
-
-
-# In[ ]:
-
-
+```python
 ncMap = folium.Map(location = [54.5 , -2], zoom_start=6)
 
 folium.Choropleth(
@@ -939,67 +856,41 @@ folium.Choropleth(
     legend_name = 'Net change by area'
 ).add_to(ncMap)
 
-
-# In[ ]:
-
-
 ncMap
+```
+The map shows that most areas in the UK recorded a net business change between 0% and 2%, indicating that, in general, business creation either slightly exceeded or roughly matched business closures. This suggests that most regions did not experience an overall business decline in 2024.
+However, approximately one quarter of UK areas recorded a negative net change (between -2% and 0%), meaning that business closures slightly outnumbered new business creations in those regions.
+Overall, net change rates appear relatively homogeneous across the UK. Northern Ireland stands out, as none of its regions recorded a strongly negative net change.
 
+## Correlations
 
-# In[ ]:
-
-
-# The map shows that most areas in the UK recorded a net business change between 0% and 2%, indicating that, in general, business creation either slightly exceeded or roughly matched business closures. This suggests that most regions did not experience an overall business decline in 2024.
-
-# However, approximately one quarter of UK areas recorded a negative net change (between -2% and 0%), meaning that business closures slightly outnumbered new business creations in those regions.
-
-# Overall, net change rates appear relatively homogeneous across the UK. Northern Ireland stands out, as none of its regions recorded a strongly negative net change.
-
-
-# In[ ]:
-
-
-# Correlations
-
-
-# In[ ]:
-
-
-# Now that each variable has been analysed independently, we will run correlation analyses to explore potential relationships between them.
+Now that each variable has been analysed independently, we will run correlation analyses to explore potential relationships between them.
     
-# Beacause Data are continuous (Counts/ percentages) and not normally distributed (data are skewed).
-# Therefore, we will perform a Spearman correlation.
+Beacause Data are continuous (Counts/ percentages) and not normally distributed (data are skewed), we will perform a Spearman correlation.
 
+```python
 cols =["Value (number of enterprises)", # Select only the 4 variable that we need
     "Value (%) New",
     "Value (%) death",
     "Value (%) growth"]
 
 df = final_table[cols]
-
-
-# In[ ]:
-
-
+```
+```python
 # Run Spearman correlation
 corr_spearman = df.corr(method="spearman")
 
 print(corr_spearman)
+```
 
+### Correlation Heatmap
 
-# In[ ]:
+To better visualize the relationships between variables, we will create a correlation heatmap.
 
-
-# Heatmap
-
-# To better visualize the relationships between variables, we will create a correlation heatmap.
-
+```python
 import seaborn as sns # For correlation heat map
-
-
-# In[ ]:
-
-
+```
+```python
 plt.figure(figsize=(8,6))
 sns.heatmap(corr_spearman,
     annot=True, # Display values
@@ -1008,21 +899,14 @@ sns.heatmap(corr_spearman,
 plt.title("Spearman correlation Matrix (UK cities, 2024)")
 
 plt.show()
+```
+The heatmap shows a strong positive correlation of 0.77 between ‘Value (%) death’ and ‘Value (%) New’, indicating a strong relationship between business creation and closure.
 
+## Scatterplot
 
-# In[ ]:
+To examine the relationship between new business formation and business closures, we will create a scatterplot to identify any patterns and trends. 
 
-
-# The heatmap shows a strong positive correlation of 0.77 between ‘Value (%) death’ and ‘Value (%) New’, indicating a strong relationship between business creation and closure.
-
-
-# In[ ]:
-
-
-#Scatterplot
-
-#To examine the relationship between new business formation and business closures, we will create a scatterplot to identify any patterns and trends. 
-
+```python
 plt.figure(figsize=(7,5))
 plt.scatter(df["Value (%) New"],
             df["Value (%) death"])
@@ -1032,23 +916,16 @@ plt.ylabel("Businesses closure (%)")
 plt.title("New vs closed Businesses by UK areas in 2024")
 
 plt.show()
+```
+The scatterplot shows a clear positive correlation between the two variables while also highlighting the presence of several outliers.
+As business creation increases, business closures also tend to increase.
 
+### Check for significance
 
-# In[ ]:
+In order to determine whether the observed correlation is likely real and not just due to random chance, we will perform a statistical significance test by calculating the correlation coefficient along with its p-value.
 
-
-# The scatterplot shows a clear positive correlation between the two variables while also highlighting the presence of several outliers.
-# As business creation increases, business closures also tend to increase.
-
-
-# In[ ]:
-
-
-#Check for significance
-
-# In order to determine whether the observed correlation is likely real and not just due to random chance, we will perform a statistical significance test by calculating the correlation coefficient along with its p-value.
-
-from scipy.stats import spearmanr
+```python
+from scipy.stats import spearmanr ## for the p value
 
 x=df["Value (%) New"]
 y=df["Value (%) death"]
@@ -1057,25 +934,11 @@ corr, p_value = spearmanr(x, y)
 
 print("Spearman correlation", corr)
 print("p-value", p_value)
+```
+ p<.001, therefore the probability of seeing this correlation by random chance is practically zero. Results are extremely significant, suggesting that the association is reliable.
 
-
-
-# In[ ]:
-
-
-# p<.001, therefore the probability of seeing this correlation by random chance is practically zero. Results are extremely significant, suggesting that the association is reliable.
-
-
-# In[ ]:
-
-
-# There is a strong positive correlation (Spearman's ρ = 0.77, p<.001) between new business formation and business deaths across cities.
-# Cities with higher rates of new business creation also tend to experience higher rates of business closures, suggesting high business turnover in more dynamic urban economies.
-# While the relationship is strong, correlation does not imply causation; both indicators likely reflect overall market dynamism.
-
-
-# In[ ]:
-
-
-get_ipython().system('jupyter nbconvert --to script buisnesses.ipynb')
-
+There is a strong positive correlation (Spearman's ρ = 0.77, p<.001) between new business formation and business deaths across cities.
+Cities with higher rates of new business creation also tend to experience higher rates of business closures, suggesting high business turnover in more dynamic urban economies. While the relationship is strong, correlation does not imply causation; both indicators likely reflect overall market dynamism.
+```python
+get_ipython().system('jupyter nbconvert --to script buisnesses.ipynb') ##Save Py file everytime i rerun the whole file.
+```
