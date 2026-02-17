@@ -38,6 +38,7 @@ new_businesses.info()
 closed_businesses.info()
 high_growth_businesses.info()
 ```
+![info](Py-UK-B-screenshots/1-info.png)
 All data types are consistent and correct. No null values. Each column contains 361 entries.
 
 
