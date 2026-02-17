@@ -43,20 +43,23 @@ All data types are consistent and correct. No null values. Each column contains 
 
 
 Use the head() function to have a quick preview of the structure of the datasets.
-
 ```python
 active_businesses.head()
 ```
+![head](Py-UK-B-screenshots/2-ab.head.png)
+
 ```python
 new_businesses.head()
 ```
+![nb-head](Py-UK-B-screenshots/3-nb-head.png)
 ```python
 closed_businesses.head()
 ```
-
+![cb-head](Py-UK-B-screenshots/4-cb-head.png)
 ```python
 high_growth_businesses.head()
 ```
+![gb-head](Py-UK-B-screenshots/4-gb-head.png)
 
 Since the dataset was for the 2024 period, unique() function was used to ensure that only data from 2024 was included.
 
@@ -73,6 +76,7 @@ tables = {
 for name, df in tables.items():
     print(name, df["Time period"].unique())
 ```
+![unique](Py-UK-B-screenshots/6-date-unique.png)
 All values in the "Time period" columns indicate 2024; therefore, the column "Time period" was removed as it no longer needed.
 
 ```python
@@ -93,30 +97,30 @@ Then, we will use the head() function on the final table to ensure all variables
 ```python
 final_table.head(400)
 ```
-
+![head-final](Py-UK-B-screenshots/7-final-head.png)
 We will now use isna() and sum() functions to count the total number of missing values in each column of the dataset.
 
 ```python
 final_table.isna().sum()
 ```
-
+![isna](Py-UK-B-screenshots/8-final-isna.png)
 The info() function was used on the final dataset to verify the number of rows matches the individual datasets and that the data types are correct.
 
 ```python
 final_table.info()
 ```
+![f-info](Py-UK-B-screenshots/9-final-info.png)
 The duplicated() function was used to see if any rows appear more than once.
 
 ```python
 final_table.duplicated()
 ```
-
+![duplicates](Py-UK-B-screenshots/10-final-duplicated.png)
 The strip() function was used to remove and potential unwanted spaces.
 
 ```python
 final_table['Area name'] = final_table['Area name'].str.strip()
 ```
-
 Since the datasets have been combined, there are no nulls or duplicates, and all variable types are correct and consistent. The analysis phase can now begin.
 
 # Analysis
@@ -126,7 +130,7 @@ The decribe() function was used to generate summary statistics for the dataset.
 ```python
 final_table.describe()
 ```
-
+![describe](Py-UK-B-screenshots/11-final-describe.png)
 The dataset comprises 361 UK areas across all variables. On average, each area contains approximately 7,921 enterprises, although this figure varies substantially, as indicated by a high standard deviation (6,541). The number of enterprises ranges from a minimum of 170 to a maximum of 58,370, highlighting significant disparities in business concentration across regions.
 
 The mean percentage of newly registered businesses is 10.58%, with most areas falling between 9.21% (25th percentile) and 11.79% (75th percentile). This suggests moderate but consistent business formation activity across the UK.
@@ -152,7 +156,7 @@ final_table['net change'] = final_table['Value (%) New'] - final_table['Value (%
 ```python
 print(final_table)
 ```
-
+![printf](Py-UK-B-screenshots/12-final-print.png)
 Folium (To create and display map) and json (To read and parse the GeoJSON map found on the ONS website) were loaded.
 
 ```python
@@ -165,8 +169,10 @@ The rest of this analysis will use choropleth maps. Before returning to the busi
 ```python
 with open("UKmap.geojson", "r") as f: # Use 'with' to automatically close the file. 'r' to read the file.
     uk_geo = json.load(f) # With the 'with' function the object assigned (here 'f') is temporary and only exist in the 'with' block.
+
 uk_geo.keys()
 ```
+![geo_keys](Py-UK-B-screenshots/13-json-keys.png)
 The uk_geo dictionary has three top-level keys. **type** indicates what kind of GeoJSON object this is. **Crs** (Coordinate Reference System) indicates how latitude/longitude coordinates are defined. **Features** correspond to a list containing all the geographic features (polygons, points, etc.) that make up the map.
 
 We will now look at the structure of the file.
@@ -175,6 +181,7 @@ We will now look at the structure of the file.
 first_feature = uk_geo["features"][0] #use [0] to get the first element as "features" is a list.
 print(first_feature)
 ```
+![printfeature](Py-UK-B-screenshots/14-first_feature-print.png)
 *We can see that in the JSON map, the area names are under properties ["LAD25NM"]. **LAD** stands for 'Local Authority District', '25' comes from the 1995 standard boundary coding system used by the UK Office for National Statistics (ONS) and NM stands for 'Name'.*
 
 To create a complete chloropleth map, the area names in the dataset must match exactly with the area names in the GeoJSON file. Any mismatch will cause the map to miss or fail to display those areas. Therefore we will now creates a set of unique area names from 'final_table', with leading/trailing whitespace removed.
@@ -205,7 +212,7 @@ missing_in_data = geo_names - data_names # area names in GeoJSON but not in data
 
 missing_in_geo, missing_in_data # shows the differences between area names in the dataset and the GeoJSON.
 ```
-
+![missing](Py-UK-B-screenshots/15-missing-values.png)
 Some discrepancies have been found in area name syntax between the dataset and the GeoJSON file.
 In the dataset Barnsley and Sheffield are followed by the mention (obsolete) unlike in the GeoJSON file.
 In the GeoJSON file Bristol, Herefordshire and Kingston upon Hull are followed by 'City of' or 'County of' unlike in the dataset.
@@ -246,6 +253,7 @@ sns.boxplot(x='Value (number of enterprises)', data=final_table)
 plt.title('Distribution and Dispersion of Areas by Enterprise Counts')
 plt.show()
 ```
+![plt.ec](Py-UK-B-screenshots/16-boxplot-ec.png)
 The boxplot shows that the median is relatively low compared to the maximum value, indicating that more than 50% of UK areas host a relatively small number of enterprises.
 The box (interquartile range) is narrow relative to the full x-axis range, suggesting that the middle 50% of areas are quite similar in terms of enterprise numbers and that variation among typical areas is limited.
 The distribution is positively skewed, with a long right-hand tail extending toward higher values. Numerous high-end outliers are present, reflecting major cities with exceptionally large numbers of enterprises.
@@ -261,7 +269,7 @@ plt.xscale('log')
 plt.title('Number of Areas by Enterprise Count (Log Scale)')
 plt.show()
 ```
-
+![plot.log](Py-UK-B-screenshots/17-boxplot-log-ec.png)
 The logarithmic boxplot shows that the median lies close to 10,000, indicating that a typical area hosts approximately 8,000–10,000 enterprises.
 Although the distribution is right-skewed in absolute terms, the logarithmic scale reveals greater relative dispersion among smaller regions, as indicated by the longer left whisker.
 The interquartile range (25th–75th percentile) spans less than one order of magnitude (a ten-fold difference), suggesting moderate variation among most UK regions.
@@ -274,7 +282,7 @@ final_table['Value (number of enterprises)'].hist(bins=25, color='orange')
 plt.title('Number of Areas by Enterprise Count')
 plt.show()
 ```
-
+![hist.ec](Py-UK-B-screenshots/18-hist-ec.png)
 The histogram indicates that most regions have between 2,500 and 5,000 enterprises.
 The distribution is strongly right-skewed, showing that most regions have relatively low enterprise counts, while a small number of regions exhibit very high concentrations of enterprises. This suggests that the data are not normally distributed.
 
@@ -283,6 +291,7 @@ Next, we ranked UK areas by total enterprise count (highest to lowest) to highli
 ```python
 final_table.set_index('Area name')['Value (number of enterprises)'].sort_values(ascending=False)
 ```
+![index.ec](Py-UK-B-screenshots/19-index-ec.png)
 
 Westminster (London) is the local authority with the highest number of enterprises, recording a total of 58,370, followed by Birmingham (43,175) and the London borough of Camden (40,825).
 In contrast, the UK areas with the lowest business concentration are predominantly smaller and more rural authorities. The Isles of Scilly recorded the lowest number of enterprises in 2024, with just 170 businesses, followed by Orkney Islands (900) and Na h-Eileanan Siar (955).
@@ -298,6 +307,7 @@ plt.ylabel('Area name')
 plt.title('Top 10 UK areas by number of enterprises')
 plt.show()
 ```
+![barh.ec](Py-UK-B-screenshots/20-barh-ec.png)
 
 The bar chart highlights that, among the top 10 UK areas with the highest business concentration, several are London boroughs, including Westminster (55,000), Camden (42,000), Hackney (30,000), and Islington (30,000).
 
@@ -363,6 +373,9 @@ folium.GeoJson( # using GeoJson because to use fine-grained, conditional styling
 ```python
 top5nemap
 ```
+![ec.map](Py-UK-B-screenshots/21-map-1.png)
+![ec.map2](Py-UK-B-screenshots/22-map-2.png)
+
 The map shows that among the five UK areas with the fewest businesses, four are on islands: the Isles of Scilly (England), Orkney Islands (Scotland), Shetland Islands (Scotland), and Eilean Siar (Scotland). The only mainland area in the top five for the lowest business numbers in 2024 is Clackmannanshire.
 In contrast, the five UK areas with the most businesses are all concentrated around major cities, including London (Westminster and Camden), Buckinghamshire, Birmingham, and Leeds.
 
@@ -387,6 +400,7 @@ folium.Choropleth(
 ```python
 amap
 ```
+![map.reg.ec](Py-UK-B-screenshots/22-region-map-ec.png)
 
 In 2024, most local authorities in the UK had between 170 and 9,890 enterprises, with some areas near major cities reporting much higher numbers. In England, Cornwall, Somerset, Wiltshire, and North Yorkshire recorded between 19,570 and 29,270 enterprises — relatively high compared to other regions, likely due to their larger geographic size.
 In Scotland, aside from the major cities, Aberdeenshire had the highest number of enterprises, also ranging from 19,570 to 29,270.
@@ -400,6 +414,7 @@ sns.boxplot(x='Value (%) growth', data=final_table)
 plt.title('Distribution of Percentage Business Growth across Area')
 plt.show()
 ```
+![boxplot.g](Py-UK-B-screenshots/23-boxplot-gr.png)
 
 The whiskers extend from around 2%, indicating regions with lower levels of business growth, to around 8% representing regions with higher business growth rate.
 The interquartile range is relatively narrow compared to the full x-axis range, suggesting that the middle 50% of areas exhibit similar levels of business growth. Most typical regions fall roughly between 4% and 5%, indicating limited variation among the majority of areas.
@@ -417,6 +432,7 @@ final_table['Value (%) growth'].hist(bins=10, color= 'orange')
 plt.title('Distribution of Percentage Business Growth across Area')
 plt.show()
 ```
+![hist.g](Py-UK-B-screenshots/24-hist-gr.png)
 
 The histogram generally aligns with the boxplot, though the distribution is not perfectly symmetrical.
 Most regions cluster in the 3%–6% business growth range around the median, indicating a common typical growth rate.
@@ -428,6 +444,7 @@ Then, the 5 UK areas with the highest growth rates and the 5 with the lowest gro
 ```python
 final_table.set_index('Area name')['Value (%) growth'].sort_values(ascending=False)
 ```
+![index.g](Py-UK-B-screenshots/25-index-gr.png)
 
 The top 5 areas that recorded the highest growth rates in 2024 were all London boroughs, respectively City of London (9.5%), Lambeth (8.8%), Southwark (8.5%), Hackney (8.0%) and Camden (7.7%).
 In contrast, the 5 areas that recorded the slowest growth rates in 2024 were Isles of Scilly, Inverclyde and Gosport all recording 0% growth, followed by North East Derbyshire (1.4%) and Argyll and Bute (1.4%).
@@ -442,6 +459,7 @@ plt.ylabel('Area name')
 plt.title('Top 10 Areas by Average growth in UK 2024')
 plt.show()
 ```
+![barh.g](Py-UK-B-screenshots/26-barh-gr.png)
 
 The chart indicates that several areas in London (City of London, Lambeth, Southwark, Camden and Islington) have very high growth rates. 
 City of London recorded almost 10% growth, followed by Lambeth, Southwark and Hackney which recorded growth rates of approximately 8%-9%.
@@ -509,6 +527,9 @@ folium.GeoJson(
 ```python
 Top5grmap
 ```
+![map.g.1](Py-UK-B-screenshots/27-map-1-gr.png)
+![map.g.2](Py-UK-B-screenshots/28-map-2-gr.png)
+
 The map highlights that the five UK areas with the highest growth rates in the UK in 2024 were all located in London: City of London, Lambeth, Camden, Hackney and Southwark.
 In contrast, the five UK areas with the lowest growth rates in 2024 were Argyll and Bute (Eastern Scotland) and its neighbour Inverclyde (Eastern Scotland), North East Derbyshire (Central England), the Isles of Scilly (off the west coast of England) and Gosport (Southern England).
 
@@ -534,6 +555,7 @@ folium.Choropleth(
 ```python
 map
 ```
+![map.reg.g](Py-UK-B-screenshots/29-map-region-gr.png)
 
 Overall, South East England, as well as eastern, western, and northern England, recorded an average growth rate of around 3% to 5% in 2024. This range represents the majority of UK local authorities, with a higher concentration of strong growth located in central and south-central England, particularly around major cities such as London, Cambridge, Oxford, Bristol, and Manchester.
 Some areas stand out from their surrounding regions. For example, the High Devon area in the South West and the Lancashire region exhibit relatively high growth rates, despite neighbouring areas showing more moderate or lower growth.
@@ -543,8 +565,6 @@ In Northern Ireland, business growth rates are generally lower than in the rest 
 
 ## Business termination rates
 
-
-
 Let create a boxplot to visualise the distribution of business death rates.
 ```python
 sns.boxplot(x='Value (%) death', data=final_table)
@@ -552,6 +572,7 @@ sns.boxplot(x='Value (%) death', data=final_table)
 plt.title('Distribution of Percentage Business termination across Areas')
 plt.show()
 ```
+![boxplot.dr](Py-UK-B-screenshots/30-boxplot-dr.png)
 
 The whiskers extend from around 6%, indicating regions with lower levels of business termination, to 13-14% representing regions with higher business closure rate.
 The interquartile range is relatively narrow compared to the full x-axis range, suggesting that the middle 50% of areas exhibit similar levels of business termination. Most typical regions fall roughly between 8% and 11%, indicating limited variation among the majority of areas.
@@ -567,6 +588,7 @@ final_table['Value (%) death'].hist(bins=20, color='orange')
 plt.title('Distribution of Percentage Business termination across Areas')
 plt.show()
 ```
+![hist.dr](Py-UK-B-screenshots/31-hist-dr.png)
 
 The histogram aligns with the boxplot, showing that most UK regions have business death rates between 8% and 11%. 
 The roughly bell-shaped distribution indicates that values cluster around the median, suggesting a fairly normal distribution where most regions exhibit typical business activity with a slight right skew.
@@ -577,6 +599,7 @@ Let's display the 5 UK areas recording the highest and lowest business terminati
 ```python
 final_table.set_index('Area name')['Value (%) death'].sort_values(ascending=False)
 ```
+![index.dr](Py-UK-B-screenshots/32-index-dr.png)
 
 The top 5 areas with the highest business death rates in 2024 were Mansfield (%), Blackpool (16%), Torfaen (16%), Wolverhampton (14%) and Salford (13%).
 In contrast, the 5 areas with the lowest business termination rates were Fermanagh and Omagh (5%), City of London (5%), Mid Ulster (5%), Shetland Islands (6%) and Isle of Scilly (5%).
@@ -594,17 +617,17 @@ plt.ylabel('Area name')
 plt.title('Top 10 Areas by death Percentage in UK in 2024')
 plt.show()
 ```
+![barh.dr](Py-UK-B-screenshots/33-barh-dr.png)
 
 Create a map that highlight only the 5 areas with the lowest business termination rates and the 5 areas with the highest ones.
 
-# First we have to create two variable, one with the top 5 areas recording the lowest business termination rates and the top 5 with the highest ones.
+First we have to create two variable, one with the top 5 areas recording the lowest business termination rates and the top 5 with the highest ones.
+
+```python
 top_5_hdr = set(final_table.nlargest(5, "Value (%) death")["Area name"])
 top_5_ldr = set(final_table.nsmallest(5, "Value (%) death")["Area name"])
-
-
-# In[ ]:
-
-
+```
+```python
 # Create the base map
 top5drmap = folium.Map(location=[54.5, -2], zoom_start=6) # After research, UK latitude is roughly 54.5 and longitude is roughly -2
 
@@ -615,11 +638,8 @@ folium.Choropleth(
     line_opacity=0.1,
     nan_fill_color="lightgray"
 ).add_to(top5drmap)
-
-
-# In[ ]:
-
-
+```
+```python
 def Color_map_d(feature):# 'feature' = one geographic area (eg Camden/Lambeth..).
     area = feature["properties"]["LAD25NM"] #Properties > LAD25NM (area names in the GeoJSON file)
     
@@ -644,7 +664,7 @@ def Color_map_d(feature):# 'feature' = one geographic area (eg Camden/Lambeth..)
         "weight": 0,
         "fillOpacity":0,
     }
-
+```
 ```python
 #Add a single GeoJson layer
 folium.GeoJson(
@@ -656,13 +676,15 @@ folium.GeoJson(
 # Display map
 top5drmap
 ```
+![map.dr1](Py-UK-B-screenshots/34-map-1-dr.png)
+![map.dr2](Py-UK-B-screenshots/35-map-2-dr.png)
 
 The map highlights the top 5 areas that experienced the lowest business termination rates in 2024.
 We can see that the top 5 is divided in three countries: the Shetland Islands in Scotland, the Fermanagh and Omagh region and the Mid-Ulster region in South-western part of Northern Ireland and City of London and Isles of Scilly for England.
 In contrast, within the top 5 areas with the highest business death rates in 2024, four are located in England:
 Mansfield, Blackpool, Wolverhampton, Salford (Manchester), while one (Torfaen) is located in Wales.
 
-Now let's creates a Choropleth map showing death rates of UK local authorities in shades of green.
+### Death rates by UK local authorities
 
 ```python
 dmap = folium.Map(location=[54.5, -2], zoom_start=6) # Create map 
@@ -683,6 +705,7 @@ folium.Choropleth(  # Add instructions
 ```python
 dmap
 ```
+![map.reg.dr](Py-UK-B-screenshots/36-region-map-dr.png)
 
 In Northern Ireland, the Strabane/Derry region records the highest business death rates, ranging from 9% to 12%. Eastern regions follow with rates around 7% to 9%, while most of the rest of Northern Ireland experiences lower rates of 5% to 7%.
 # In Scotland, most areas have death rates between 7% and 9%. Some regions, such as Dumfries & Galloway (Southern Scotland) and Highland (Northern Scotland), have lower rates of 5% to 7%. In contrast, the areas around Glasgow and Edinburgh show higher rates, ranging from 9% to 12%.
@@ -699,6 +722,7 @@ sns.boxplot(x='Value (%) New', data=final_table)
 plt.title('Distribution of Percentage Business creation across Areas')
 plt.show()
 ```
+![boxplot.cr](Py-UK-B-screenshots/37-boxplot-cr.png)
 
 The whiskers extend from around 6%, indicating regions with weaker entrepreneurial activity, to 15-16% representing stronger-performing regions.
 The boxplot shows that the median percentage of new businesses across UK is around 10-11%. The median lies slightly closer to the lower end of the distribution, indicating that more than 50% of UK areas recorded over 10% new businesses in 2024.
@@ -714,6 +738,7 @@ final_table['Value (%) New'].hist(bins=20,color='orange')
 plt.title('Distribution of Percentage Business creation across Areas')
 plt.show()
 ```
+![hist.cr](Py-UK-B-screenshots/38-hist-cr.png)
 
 The histogram aligns with the boxplot, showing that most UK regions have business formation rates between 9% and 11%. 
 The roughly bell-shaped distribution indicates that values cluster around the median, suggesting a fairly normal distribution where most regions exhibit typical business activity. The noticeable spike around 9% highlights that a substantial number of regions share this specific level of new business formation in 2024,
@@ -724,6 +749,8 @@ Let's display the 5 UK areas with the highest business creation rates in 2024 an
 ```python
 final_table.set_index('Area name')['Value (%) New'].sort_values(ascending=False)
 ```
+![index.cr](Py-UK-B-screenshots/39-index-cr.png)
+
 The UK areas with the highest business creation rates in 2024 were Newham (17%), Barking and Dagenham (17%), and Luton (16%). 
 In contrast, the UK areas with the lowest business creation rates were Orkney Islands (6%), Shetland Islands (7%) and Mid Ulster (7%).
 
@@ -740,6 +767,7 @@ plt.ylabel('Area name')
 plt.title('Top 10 UK areas by business creation rates in 2024')
 plt.show()
 ```
+![barh.cr](Py-UK-B-screenshots/40-barh-cr.png)
 
 Let's create a map that highlight only the 5 areas with the lowest business creation rates and the 5 areas with the highest ones.
 
@@ -800,6 +828,9 @@ folium.GeoJson(
 # Display map
 top5crmap
 ```
+![map.cr1](Py-UK-B-screenshots/41-map-1-cr.png)
+![map.cr2](Py-UK-B-screenshots/42-map-2-cr.png)
+
 Among the five UK areas with the lowest business creation rates in 2024, two were in Scotland (Orkney Islands and Shetland Islands), one in Northern Ireland (Mid Ulster), one in Wales (Ceredigion), and one in England (Mid Suffolk).
 In contrast, all five areas with the highest business creation rates were in England, including three in the Greater London area (Newham, Barking and Dagenham, and Islington), as well as Luton and Middlesbrough.
 
@@ -822,6 +853,8 @@ folium.Choropleth(
 
 nmap
 ```
+![map.reg.cr](Py-UK-B-screenshots/43-map-region-cr.png)
+
 In Northern Ireland, the Strabane/Derry region records the highest business birth rates, ranging from 14% to 15%, while Belfast is slightly lower at 12% to 14%. Most of the rest of Northern Ireland falls between 8% and 10%, except for central Northern Ireland, where rates are particularly low, around 6% to 8%.
 In Scotland, the majority of areas have business birth rates between 8% and 10%. Certain regions have very low rates, ranging from 6% to 8%, including Aberdeenshire (Eastern Scotland), Eilean Siar (Western Isles), Argyll & Bute (Western Scotland), and some of the Northern Islands. In contrast, areas around Glasgow and Edinburgh experience higher birth rates, approximately 13% to 14%.
 In Wales, most local authorities report business birth rates of 8% to 10%. Gwynedd and Ceredigion in Western Wales have lower rates, around 6% to 8%, while Cardiff and its surrounding areas are higher, ranging from 10% to 12%, with the highest nearby, reaching 12% to 14%.
@@ -835,12 +868,14 @@ Below are the areas with the highest net change (more business creations than cl
 ```python
 final_table.set_index('Area name')['net change'].sort_values(ascending=False)
 ```
+![index.nch](Py-UK-B-screenshots/44-index-netc.png)
+
 Negative values indicate areas where there were more business closures than creations in 2024, while positive values indicate areas where business creations exceeded closures.
 
 The results show that the areas with the highest positive net change were Derry City and Strabane (5%), Newham (5%), and Barking and Dagenham (5%), meaning these areas experienced the strongest net business growth.
 In contrast, the areas with the lowest net change were Mansfield (-5%), Torfaen (-4%), and Blackpool (-4%), indicating that closures outnumbered new business creations in these locations.
 
-## Business Net changes by regions
+### Business Net changes by regions
 
 ```python
 ncMap = folium.Map(location = [54.5 , -2], zoom_start=6)
@@ -859,6 +894,8 @@ folium.Choropleth(
 
 ncMap
 ```
+![netc.map](Py-UK-B-screenshots/45-map-netc.png)
+
 The map shows that most areas in the UK recorded a net business change between 0% and 2%, indicating that, in general, business creation either slightly exceeded or roughly matched business closures. This suggests that most regions did not experience an overall business decline in 2024.
 However, approximately one quarter of UK areas recorded a negative net change (between -2% and 0%), meaning that business closures slightly outnumbered new business creations in those regions.
 Overall, net change rates appear relatively homogeneous across the UK. Northern Ireland stands out, as none of its regions recorded a strongly negative net change.
@@ -883,6 +920,7 @@ corr_spearman = df.corr(method="spearman")
 
 print(corr_spearman)
 ```
+![print.corr](Py-UK-B-screenshots/46-print-corr.png)
 
 ### Correlation Heatmap
 
@@ -901,9 +939,11 @@ plt.title("Spearman correlation Matrix (UK cities, 2024)")
 
 plt.show()
 ```
+![heatmap](Py-UK-B-screenshots/47-heat-coor-matrix.png)
+
 The heatmap shows a strong positive correlation of 0.77 between ‘Value (%) death’ and ‘Value (%) New’, indicating a strong relationship between business creation and closure.
 
-## Scatterplot
+### Scatterplot
 
 To examine the relationship between new business formation and business closures, we will create a scatterplot to identify any patterns and trends. 
 
@@ -918,6 +958,8 @@ plt.title("New vs closed Businesses by UK areas in 2024")
 
 plt.show()
 ```
+![scatterplot](Py-UK-B-screenshots/48-scatterplot.png)
+
 The scatterplot shows a clear positive correlation between the two variables while also highlighting the presence of several outliers.
 As business creation increases, business closures also tend to increase.
 
@@ -936,10 +978,13 @@ corr, p_value = spearmanr(x, y)
 print("Spearman correlation", corr)
 print("p-value", p_value)
 ```
+![p](Py-UK-B-screenshots/49-significance-p.png)
+
  p<.001, therefore the probability of seeing this correlation by random chance is practically zero. Results are extremely significant, suggesting that the association is reliable.
 
 There is a strong positive correlation (Spearman's ρ = 0.77, p<.001) between new business formation and business deaths across cities.
 Cities with higher rates of new business creation also tend to experience higher rates of business closures, suggesting high business turnover in more dynamic urban economies. While the relationship is strong, correlation does not imply causation; both indicators likely reflect overall market dynamism.
+
 ```python
 get_ipython().system('jupyter nbconvert --to script buisnesses.ipynb') ##Save Py file everytime i rerun the whole file.
 ```
