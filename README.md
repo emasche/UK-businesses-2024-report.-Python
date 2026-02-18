@@ -994,3 +994,29 @@ Cities with higher rates of new business creation also tend to experience higher
 ```python
 get_ipython().system('jupyter nbconvert --to script buisnesses.ipynb') ##Save Py file everytime i rerun the whole file.
 ```
+# Conclusion
+
+Overall, the analysis shows that UK business dynamics in 2024 are highly uneven across local authorities, with strong concentrations of enterprises and growth in and around major urban areas, while more remote and rural regions tend to lag behind.​
+
+### Core national picture
+Across the 361 areas, business creation slightly exceeds business closure on average, with mean new business creation around 10.6% and mean business termination rates about 9.6%, implying modest net expansion in the business population. Only a small proportion of firms achieve high growth (around 4.5% on average), which shows that strong employment expansion is uncommon compared with the general pattern of businesses starting up and closing down  Most areas record net change between roughly -2% and +2%, suggesting that for the majority of UK areas, 2024 was a stable year with modest net growth rather than dramatic structural shifts.​
+
+### Spatial concentration and regional inequality
+Enterprise numbers are highly right‑skewed, with a few local authorities (especially London boroughs and major cities such as Westminster, Camden and Birmingham) hosting very large business populations and many smaller authorities hosting comparatively few enterprises. The Isles of Scilly, Orkney Islands and Na h‑Eileanan Siar sit at the very bottom of the distribution, highlighting how peripheral island and rural areas remain disadvantaged in terms of business presence. Choropleth maps reinforce this pattern by showing that high enterprise counts cluster mainly around London, large English counties such as North Yorkshire and key Scottish regions like Aberdeenshire, while much of the rest of the UK register fewer businesses.​
+
+### Growth, births and deaths: an urban turnover story
+Business growth rates cluster around 4%–5% and are highest in a small number of London boroughs (City of London, Lambeth, Southwark, Hackney, Camden), indicating that the most intense employment expansion is heavily urban and capital‑centric. In contrast, some peripheral or structurally weaker areas (Isles of Scilly, Inverclyde, Gosport, North East Derbyshire, Argyll and Bute) record minimal or complete business stagnation. A similar urban pattern emerges for business creation: the highest birth rates are concentrated in London and a few English authorities such as Newham, Barking and Dagenham, Luton and Middlesbrough, while the lowest birth rates are observed in the Scottish islands, Mid Ulster and other rural counties.
+Business death rates also show moderate dispersion, with most areas falling between 8% and 11%, but with striking peaks in Mansfield, Blackpool, Torfaen, Wolverhampton and Salford, where closure rates are very high. On the other end, places like Fermanagh and Omagh, Mid Ulster, Shetland Islands, City of London and Isles of Scilly exhibit notably low death rates, suggesting either more resilient business bases or different local conditions and structures. After combinining business closures and creations, net change is strongest in Derry City and Strabane, Newham and Barking and Dagenham (5%) and weakest in Mansfield, Torfaen and Blackpool (-4% to -5%), making it clear that some local economies are growing while others are declining.
+​
+### Correlation and turnover
+The correlation analysis reveals a strong positive association between business birth and death rates (Spearman ρ ≈ 0.77, p < .001), implying that areas with more new enterprises also tend to have more closures. This pattern further indicates that dynamic areas experience a high turnover in both business creation and, consequently, failure rates. These dynamic areas, due to higher levels of business experimentation, greater costs, and stronger competition, may face increased chances of failure.
+Therefore, it is important to interpret high birth rates alongside equally high closure rates rather than as unquestionable signs of strength.
+​
+### Implications
+The findings suggest several priorities. It is important to support lagging rural and peripheral regions that experience both low business counts and weak growth. To do so, policymakers should address abnormally high closure rates in specific areas such as Mansfield, Blackpool, and Torfaen, and design interventions in high-turnover urban economies to help viable new firms survive beyond the initial start-up phase.​
+
+### Limitations
+It is important to note that the analysis focuses only on a single year (2024) and does not account for the number of years enterprises were operating before closure. Furthermore, the datasets solely rely on VAT/PAYE‑registered enterprises and use aggregated local authority data, which do not account for differences within areas and sectors.  
+
+### Futher work
+Future work could extend this report by comparing this analysis with previous years and/or by focusing on business sectors within different UK areas. Further work could also examine business productivity by UK area in order to better understand local economic performance and growth potential.
