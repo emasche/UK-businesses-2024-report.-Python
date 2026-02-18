@@ -1,5 +1,8 @@
 # UK businesses 2024 report. Python
 
+## Material used 
+
+### Datasets
 The four datasets used in this project were obtained from the publicly available UK Statistical Bulletins, specifically the ONS 2024 annual report on Business Demography.
 From this report, four datasets were downloaded:
 
@@ -11,17 +14,21 @@ From this report, four datasets were downloaded:
    
 4.	**Business Turnover and Employment (2019–2024)**: This dataset records business turnover and employment from 2019 to 2024 for the 361 areas. To ensure compatibility with the other datasets, only data for the year 2024 was retained. [dataset](https://www.ons.gov.uk/explore-local-statistics/indicators/active-businesses)
    
-The areas in the dataset and in the GeoJSON file found on the ONS website represent a mix of UK administrative units, including London boroughs, local authority districts, and one county.
+
+### Maps
+For the following analysis, since the areas in the dataset and in the GeoJSON file found on the ONS website represent a mix of UK administrative units, including London boroughs, local authority districts, and one county, the corresponding GeoJSON file has been uploaded: ![GEOJSONmap](Maps/UKmap.geojson) 
+
+In order to analyse the choropleth maps created in this project, I used publicly available maps that are easier to read than the raw GeoJSON file and that are delimited in the same way as both the dataset and the GeoJSON file. One map is for Northern Ireland: ![Northern Ireland local authorities map](Maps/map-northern-ireland-districts-labeled-color-map-districts-northern-ireland-united-kingdom.webp) and one for the rest of the United Kingdom ![UK local authorities map](Maps/Uk-Local-authorities.jpg). The separate Northern Ireland map is included because the first map boundaries shown in the general UK map differ from those in the main GeoJSON file, ensuring consistency with the GeoJSON boundaries used in the analysis.
 
 # Loading and cleaning the Data
 
-First we import the **pandas** library to work with Excel files and dataFrames and gives it the short nickname pd to be able to use all pandas functions (read_excel, DataFrame, drop, etc.)
+First I imported the **pandas** library to work with Excel files and DataFrames and gave it the short nickname 'pd' to be able to use all pandas functions (read_excel, DataFrame, drop, etc.)
 
 ```python
 import pandas as pd
 ```
 
-Creates and defines four separate pandas DataFrames from the 4 sheets in original Excel file.
+I then created and defined four separate pandas DataFrames from the 4 sheets in original Excel file.
 
 ```python
 active_businesses = pd.read_excel("Businesses_2024.xlsx", sheet_name="Active businesses 2024")
@@ -30,7 +37,7 @@ closed_businesses = pd.read_excel("Businesses_2024.xlsx", sheet_name="Death busi
 high_growth_businesses = pd.read_excel("Businesses_2024.xlsx", sheet_name="High growth businesses 2024")
 ```
 
-Use the info() function to view the variables present in each dataset as well as data types and number of nulls, and rows.
+Next, I used the info() function to view the variables present in each dataset as well as data types and number of nulls, and rows.
 
 ```python
 active_businesses.info()
@@ -41,8 +48,7 @@ high_growth_businesses.info()
 ![info](Py-UK-B-screenshots/1-info.png)
 All data types are consistent and correct. No null values. Each column contains 361 entries.
 
-
-Use the head() function to have a quick preview of the structure of the datasets.
+Next, I used the head() function to have a quick preview of the structure of the datasets.
 ```python
 active_businesses.head()
 ```
@@ -61,9 +67,9 @@ high_growth_businesses.head()
 ```
 ![gb-head](Py-UK-B-screenshots/4-gb-head.png)
 
-Since the dataset was for the 2024 period, unique() function was used to ensure that only data from 2024 was included.
+Since the dataset was for the 2024 period, I used the unique() function to ensure that only data from 2024 was included.
 
-We will first create a dictionary to store all four business datasets, then loop through each dataset to display its name and the unique values in the "Time period" column.
+I then created a dictionary to store all four business datasets, then loop through each dataset to display its name and the unique values in the "Time period" column.
 
 ```python
 tables = {
@@ -86,36 +92,42 @@ closed_businesses.drop(columns="Time period", inplace=True)
 high_growth_businesses.drop(columns="Time period", inplace=True)
 ```
 
-Now we will create one table that combined all 4 variables by Area name and Area code.
+I then created one table that combined all 4 variables by Area name and Area code.
+
 ```python
 merged1 = pd.merge(active_businesses, new_businesses, on =["Area name","Area code"], how="outer")
 merged2= pd.merge(merged1, closed_businesses, on=["Area name","Area code"], how="outer")
 final_table= pd.merge(merged2, high_growth_businesses, on=["Area name", "Area code"], how="outer")
 ```
 
-Then, we will use the head() function on the final table to ensure all variables are included.
+Then, I used the head() function on the final table to ensure all variables are included.
+
 ```python
 final_table.head(400)
 ```
 ![head-final](Py-UK-B-screenshots/7-final-head.png)
-We will now use isna() and sum() functions to count the total number of missing values in each column of the dataset.
+
+Next, I used isna() and sum() functions to count the total number of missing values in each column of the dataset.
 
 ```python
 final_table.isna().sum()
 ```
 ![isna](Py-UK-B-screenshots/8-final-isna.png)
-The info() function was used on the final dataset to verify the number of rows matches the individual datasets and that the data types are correct.
+
+Then, the info() function was used on the final dataset to verify the number of rows matches the individual datasets and that the data types are correct.
 
 ```python
 final_table.info()
 ```
 ![f-info](Py-UK-B-screenshots/9-final-info.png)
+
 The duplicated() function was used to see if any rows appear more than once.
 
 ```python
 final_table.duplicated()
 ```
 ![duplicates](Py-UK-B-screenshots/10-final-duplicated.png)
+
 The strip() function was used to remove and potential unwanted spaces.
 
 ```python
@@ -157,6 +169,7 @@ final_table['net change'] = final_table['Value (%) New'] - final_table['Value (%
 print(final_table)
 ```
 ![printf](Py-UK-B-screenshots/12-final-print.png)
+
 Folium (To create and display map) and json (To read and parse the GeoJSON map found on the ONS website) were loaded.
 
 ```python
@@ -172,6 +185,7 @@ with open("UKmap.geojson", "r") as f: # Use 'with' to automatically close the fi
 
 uk_geo.keys()
 ```
+
 ![geo_keys](Py-UK-B-screenshots/13-json-keys.png)
 The uk_geo dictionary has three top-level keys. **type** indicates what kind of GeoJSON object this is. **Crs** (Coordinate Reference System) indicates how latitude/longitude coordinates are defined. **Features** correspond to a list containing all the geographic features (polygons, points, etc.) that make up the map.
 
@@ -258,7 +272,6 @@ The boxplot shows that the median is relatively low compared to the maximum valu
 The box (interquartile range) is narrow relative to the full x-axis range, suggesting that the middle 50% of areas are quite similar in terms of enterprise numbers and that variation among typical areas is limited.
 The distribution is positively skewed, with a long right-hand tail extending toward higher values. Numerous high-end outliers are present, reflecting major cities with exceptionally large numbers of enterprises.
 Overall, the boxplot indicates a highly right-skewed distribution of enterprises across UK areas. While the median number of enterprises is relatively low, a small number of regions exhibit exceptionally high values, as shown by the many upper-end outliers. This pattern suggests substantial regional inequality in business concentration, with most areas hosting modest numbers of enterprises and a few metropolitan hubs dominating overall business activity. Due to the presence of extreme values, the median provides a more representative measure of central tendency than the mean.
-
 
 Given the highly right-skewed distribution and the presence of extreme values, a logarithmic scale was applied to improve visual interpretation of the central distribution and facilitate comparison across typical UK areas.
 
@@ -684,8 +697,6 @@ We can see that the top 5 is divided in three countries: the Shetland Islands in
 In contrast, within the top 5 areas with the highest business death rates in 2024, four are located in England:
 Mansfield, Blackpool, Wolverhampton, Salford (Manchester), while one (Torfaen) is located in Wales.
 
-### Death rates by UK local authorities
-
 ```python
 dmap = folium.Map(location=[54.5, -2], zoom_start=6) # Create map 
 
@@ -834,8 +845,6 @@ top5crmap
 Among the five UK areas with the lowest business creation rates in 2024, two were in Scotland (Orkney Islands and Shetland Islands), one in Northern Ireland (Mid Ulster), one in Wales (Ceredigion), and one in England (Mid Suffolk).
 In contrast, all five areas with the highest business creation rates were in England, including three in the Greater London area (Newham, Barking and Dagenham, and Islington), as well as Luton and Middlesbrough.
 
-### Creation rates by UK regions.
-
 ```python
 nmap = folium.Map(location=[54.5, -2], zoom_start=6)
 
@@ -860,7 +869,6 @@ In Scotland, the majority of areas have business birth rates between 8% and 10%.
 In Wales, most local authorities report business birth rates of 8% to 10%. Gwynedd and Ceredigion in Western Wales have lower rates, around 6% to 8%, while Cardiff and its surrounding areas are higher, ranging from 10% to 12%, with the highest nearby, reaching 12% to 14%.
 In England, most local authorities see business birth rates of 8% to 10%. Some areas near major cities have higher rates of 14% to 15%, reaching up to 16% in London and Middlesbrough. Conversely, areas such as Mid Suffolk, East Cambridgeshire, and Derbyshire Dales exhibit lower rates, around 6% to 8%.
 
-
 ## Business Closures VS Creations
 
 Below are the areas with the highest net change (more business creations than closures) and the lowest net change (more business closures than creations).
@@ -874,8 +882,6 @@ Negative values indicate areas where there were more business closures than crea
 
 The results show that the areas with the highest positive net change were Derry City and Strabane (5%), Newham (5%), and Barking and Dagenham (5%), meaning these areas experienced the strongest net business growth.
 In contrast, the areas with the lowest net change were Mansfield (-5%), Torfaen (-4%), and Blackpool (-4%), indicating that closures outnumbered new business creations in these locations.
-
-### Business Net changes by regions
 
 ```python
 ncMap = folium.Map(location = [54.5 , -2], zoom_start=6)
