@@ -722,7 +722,7 @@ dmap
 ![map.reg.dr](Py-UK-B-screenshots/36-region-map-dr.png)
 
 In Northern Ireland, the Strabane/Derry region records the highest business death rates, ranging from 9% to 12%. Eastern regions follow with rates around 7% to 9%, while most of the rest of Northern Ireland experiences lower rates of 5% to 7%.
-# In Scotland, most areas have death rates between 7% and 9%. Some regions, such as Dumfries & Galloway (Southern Scotland) and Highland (Northern Scotland), have lower rates of 5% to 7%. In contrast, the areas around Glasgow and Edinburgh show higher rates, ranging from 9% to 12%.
+In Scotland, most areas have death rates between 7% and 9%. Some regions, such as Dumfries & Galloway (Southern Scotland) and Highland (Northern Scotland), have lower rates of 5% to 7%. In contrast, the areas around Glasgow and Edinburgh show higher rates, ranging from 9% to 12%.
 In Wales, the majority of local authorities have death rates around 7% to 9%, except for Powys, which is lower (5% to 7%), and Torfaen, which is notably high, between 16% and 18%.
 In England, most local authorities experience business death rates of 7% to 9%. Some areas, such as Malvern Hills (Worcestershire), North West Leicestershire, and Torridge (Devon), are lower at 5% to 7%. Around major cities like London, rates vary more: the highest are in Mansfield (Nottinghamshire) and Blackpool, reaching 16% to 18%, while other urban areas, particularly near Birmingham, show rates between 12% and 16%.
 
