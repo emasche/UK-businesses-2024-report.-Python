@@ -86,6 +86,7 @@ for name, df in tables.items():
     print(name, df["Time period"].unique())
 ```
 ![unique](Py-UK-B-screenshots/6-date-unique.png)
+
 All values in the "Time period" columns indicate 2024; therefore, the column "Time period" was removed as it no longer needed.
 
 ```python
@@ -146,6 +147,7 @@ The decribe() function was used to generate summary statistics for the dataset.
 final_table.describe()
 ```
 ![describe](Py-UK-B-screenshots/11-final-describe.png)
+
 The dataset comprises 361 UK areas across all variables. On average, each area contains approximately 7,921 enterprises, although this figure varies substantially, as indicated by a high standard deviation (6,541). The number of enterprises ranges from a minimum of 170 to a maximum of 58,370, highlighting significant disparities in business concentration across regions.
 
 The mean percentage of newly registered businesses is 10.58%, with most areas falling between 9.21% (25th percentile) and 11.79% (75th percentile). This suggests moderate but consistent business formation activity across the UK.
@@ -190,6 +192,7 @@ uk_geo.keys()
 ```
 
 ![geo_keys](Py-UK-B-screenshots/13-json-keys.png)
+
 The uk_geo dictionary has three top-level keys. **type** indicates what kind of GeoJSON object this is. **Crs** (Coordinate Reference System) indicates how latitude/longitude coordinates are defined. **Features** correspond to a list containing all the geographic features (polygons, points, etc.) that make up the map.
 
 We will now look at the structure of the file.
@@ -199,6 +202,7 @@ first_feature = uk_geo["features"][0] #use [0] to get the first element as "feat
 print(first_feature)
 ```
 ![printfeature](Py-UK-B-screenshots/14-first_feature-print.png)
+
 *We can see that in the JSON map, the area names are under properties ["LAD25NM"]. **LAD** stands for 'Local Authority District', '25' comes from the 1995 standard boundary coding system used by the UK Office for National Statistics (ONS) and NM stands for 'Name'.*
 
 To create a complete chloropleth map, the area names in the dataset must match exactly with the area names in the GeoJSON file. Any mismatch will cause the map to miss or fail to display those areas. Therefore we will now creates a set of unique area names from 'final_table', with leading/trailing whitespace removed.
@@ -230,6 +234,7 @@ missing_in_data = geo_names - data_names # area names in GeoJSON but not in data
 missing_in_geo, missing_in_data # shows the differences between area names in the dataset and the GeoJSON.
 ```
 ![missing](Py-UK-B-screenshots/15-missing-values.png)
+
 Some discrepancies have been found in area name syntax between the dataset and the GeoJSON file.
 In the dataset Barnsley and Sheffield are followed by the mention (obsolete) unlike in the GeoJSON file.
 In the GeoJSON file Bristol, Herefordshire and Kingston upon Hull are followed by 'City of' or 'County of' unlike in the dataset.
@@ -271,6 +276,7 @@ plt.title('Distribution and Dispersion of Areas by Enterprise Counts')
 plt.show()
 ```
 ![plt.ec](Py-UK-B-screenshots/16-boxplot-ec.png)
+
 The boxplot shows that the median is relatively low compared to the maximum value, indicating that more than 50% of UK areas host a relatively small number of enterprises.
 The box (interquartile range) is narrow relative to the full x-axis range, suggesting that the middle 50% of areas are quite similar in terms of enterprise numbers and that variation among typical areas is limited.
 The distribution is positively skewed, with a long right-hand tail extending toward higher values. Numerous high-end outliers are present, reflecting major cities with exceptionally large numbers of enterprises.
@@ -286,6 +292,7 @@ plt.title('Number of Areas by Enterprise Count (Log Scale)')
 plt.show()
 ```
 ![plot.log](Py-UK-B-screenshots/17-boxplot-log-ec.png)
+
 The logarithmic boxplot shows that the median lies close to 10,000, indicating that a typical area hosts approximately 8,000–10,000 enterprises.
 Although the distribution is right-skewed in absolute terms, the logarithmic scale reveals greater relative dispersion among smaller regions, as indicated by the longer left whisker.
 The interquartile range (25th–75th percentile) spans less than one order of magnitude (a ten-fold difference), suggesting moderate variation among most UK regions.
@@ -299,6 +306,7 @@ plt.title('Number of Areas by Enterprise Count')
 plt.show()
 ```
 ![hist.ec](Py-UK-B-screenshots/18-hist-ec.png)
+
 The histogram indicates that most regions have between 2,500 and 5,000 enterprises.
 The distribution is strongly right-skewed, showing that most regions have relatively low enterprise counts, while a small number of regions exhibit very high concentrations of enterprises. This suggests that the data are not normally distributed.
 
@@ -390,6 +398,7 @@ folium.GeoJson( # using GeoJson because to use fine-grained, conditional styling
 top5nemap
 ```
 ![ec.map](Py-UK-B-screenshots/21-map-1.png)
+
 ![ec.map2](Py-UK-B-screenshots/22-map-2.png)
 
 The map shows that among the five UK areas with the fewest businesses, four are on islands: the Isles of Scilly (England), Orkney Islands (Scotland), Shetland Islands (Scotland), and Eilean Siar (Scotland). The only mainland area in the top five for the lowest business numbers in 2024 is Clackmannanshire.
@@ -544,6 +553,7 @@ folium.GeoJson(
 Top5grmap
 ```
 ![map.g.1](Py-UK-B-screenshots/27-map-1-gr.png)
+
 ![map.g.2](Py-UK-B-screenshots/28-map-2-gr.png)
 
 The map highlights that the five UK areas with the highest growth rates in the UK in 2024 were all located in London: City of London, Lambeth, Camden, Hackney and Southwark.
